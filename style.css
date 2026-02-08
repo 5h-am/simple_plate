@@ -21,7 +21,9 @@ img {
     padding: 1em;
     border-radius: 1rem;
     box-shadow: 2px 5px 10px rgb(24, 23, 23);
+    margin: 0 auto;
     margin-bottom: 1em;
+    
 
 }
 
@@ -39,6 +41,41 @@ img {
     margin: 0 auto;
 }
 
+.nav-options {
+    display: flex;
+    justify-content: space-between;
+}
+
+.animation-box{
+    background: url("https://www.themealdb.com/images/media/meals/u2lhqb1763331899.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding: 4em 6em;
+}
+
+.animation-nav {
+    display: flex;
+    justify-content: center;
+    gap: 30%;
+}
+
+.search-icon,
+.filter-icon,
+.arrow-back-icon,
+.arrow-next-icon {
+    background-color: #FFC107;
+    border-radius: 50%;
+    color: #fff;
+    padding: 0.4em;
+    margin-block: 0.3em;
+    text-align: center;
+}
+
+.arrow-back-icon,
+.arrow-next-icon {
+    margin-top: 0;
+}
 
 .category-card-text {
     font-family: "Italianno";
