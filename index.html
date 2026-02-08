@@ -6,23 +6,132 @@
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <script src="script.js" defer></script>
-        <title>Top 250 Movies</title>
+        <title>Recipe Page</title>
     </head>
     <body>
         <div class="container">
-            <header class="nav">   
-                <span class="material-symbols-outlined">menu</span>
-                <span class="material-symbols-outlined">search</span>
-            </header>
-            <article class="animation-box">
-
+            <nav>
+                <div class="search">      
+                    <p class="search-label"><span class="material-symbols-outlined search-icon">search</span>search</p>
+                </div>
+            </nav>
+            <article class="animation-box card">
+                <div class="animation-recipe-cards">
+                    <div class="arrow_back">
+                        <span class="material-symbols-outlined">arrow_back_ios</span>
+                    </div>                   
+                    <div class="animation-card-info">
+                        <p class="animation-card-text">Seafood</p>
+                        <p class="animation-card-text">Spanish</p>
+                    </div>
+                    <div class="arrow_next">
+                        <span class="material-symbols-outlined">arrow_forward_ios</span>
+                    </div>                    
+                </div>
             </article>
-            <div class="genres">
+            <div class="categories">
+                <div class="filter">
+                    <span class="material-symbols-outlined">filter_alt</span>
+                </div>            
+                <div class="category-card card">
+                    <div class="category-card-content card-content">
+                        <img src="https://www.themealdb.com/images/media/meals/u2lhqb1763331899.jpg" alt="Garlicky prawns with sherry"class="card-img">
+                        <p class="category-card-text">Seafood</p>
+                    </div>
+                </div>
+                <div class="area-card card">
+                    <div class="category-card-content card-content">
+                        <img src="https://www.themealdb.com/images/media/meals/u2lhqb1763331899.jpg" alt="Garlicky prawns with sherry" class="card-img">
+                        <p class="category-card-text">Spanish</p>
+                    </div>
+                </div>
 
             </div>
-            <div class="movies">
-
+            <div class="recipes">
+                <div class="recipe-card card">
+                    <div class="recipe-card-content card-content">
+                        <img src="https://www.themealdb.com/images/media/meals/u2lhqb1763331899.jpg" alt="Garlicky prawns with sherry" class="card-img">
+                        <p class="recipe-card-text">Garlicky prawns with sherry</p>
+                        <div class="category-and-area">
+                            <p class="recipe-card-text">Seafood</p>
+                            <p class="recipe-card-text">Spanish</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="recipe-card card">
+                    <div class="recipe-card-content card-content">
+                        <img src="https://www.themealdb.com/images/media/meals/u2lhqb1763331899.jpg" alt="Garlicky prawns with sherry" class="card-img">
+                        <p class="recipe-card-text">Garlicky prawns with sherry</p>
+                        <div class="category-and-area">
+                            <p class="recipe-card-text">Seafood</p>
+                            <p class="recipe-card-text">Spanish</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
 </html>
+<!-- {
+  meals: [
+    {
+      idMeal: '53180',
+      strMeal: 'Garlicky prawns with sherry',
+      strMealAlternate: null,
+      strCategory: 'Seafood',
+      strArea: 'Spanish',
+      strInstructions: 'step 1\r\n' +
+        'Heat the olive oil in a large frying pan. Tip in the garlic slices and cook for a few secs. Then stir through the prawns and cook for a couple of mins until they start to turn pink.\r\n' +
+        '\r\n' +
+        'step 2\r\n' +
+        'Pour over the sherry and cook for a few mins more, just until the prawns are cooked through. Sprinkle with parsley before serving.',
+      strMealThumb: 'https://www.themealdb.com/images/media/meals/u2lhqb1763331899.jpg',
+      strTags: null,
+      strYoutube: 'https://www.youtube.com/watch?v=2hf2xltFbxQ',
+      strIngredient1: 'Olive Oil',
+      strIngredient2: 'Garlic',
+      strIngredient3: 'Prawns',
+      strIngredient4: 'Dry sherry',
+      strIngredient5: 'Parsley',
+      strIngredient6: '',
+      strIngredient7: '',
+      strIngredient8: '',
+      strIngredient9: '',
+      strIngredient10: '',
+      strIngredient11: '',
+      strIngredient12: '',
+      strIngredient13: '',
+      strIngredient14: '',
+      strIngredient15: '',
+      strIngredient16: '',
+      strIngredient17: '',
+      strIngredient18: '',
+      strIngredient19: '',
+      strIngredient20: '',
+      strMeasure1: '3  tablespoons',
+      strMeasure2: '3 cloves Chopped',
+      strMeasure3: '400g',
+      strMeasure4: '2 tbsp',
+      strMeasure5: 'Handful',
+      strMeasure6: ' ',
+      strMeasure7: ' ',
+      strMeasure8: ' ',
+      strMeasure9: ' ',
+      strMeasure10: ' ',
+      strMeasure11: ' ',
+      strMeasure12: ' ',
+      strMeasure13: ' ',
+      strMeasure14: ' ',
+      strMeasure15: ' ',
+      strMeasure16: ' ',
+      strMeasure17: ' ',
+      strMeasure18: ' ',
+      strMeasure19: ' ',
+      strMeasure20: ' ',
+      strSource: 'https://www.bbcgoodfood.com/recipes/garlicky-prawns-sherry',
+      strImageSource: null,
+      strCreativeCommonsConfirmed: null,
+      dateModified: '2025-11-16 22:22:06'
+    }
+  ]
+} -->
