@@ -41,6 +41,28 @@ img {
     margin: 0 auto;
 }
 
+.filter-options {
+    background-color: rgb(48, 46, 46);
+    color: #fff;    
+    padding: 2em;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    z-index: 1;   
+    transition: 0.5s;
+}
+
+.filter-option {
+    text-decoration: none;
+    font-family: "Ubuntu";
+    font-size: 1em;
+    font-weight: 400;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+}
+
 .nav-options {
     display: flex;
     justify-content: space-between;
@@ -84,7 +106,18 @@ img {
     text-align: center;
 }
 
-.recipe-card-text {
+.see-recipes-btn {
+    background-color: #FFC107;
+    color: #fff;
+    padding: 1em 0.1em;
+    border-radius: 1rem;
+    font-family: "Ubuntu";
+    font-size: 1.4em;
+    border: 2px solid #957106;
+    width: 100%;
+}
+
+.animation-card-text {
     font-family: "Italianno";
     font-size: 2em;
     font-weight: 400;
@@ -92,9 +125,26 @@ img {
     margin-block: 0.3em;
 }
 
-.category-and-area {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 0;
+.recipe-card-text {
+    font-family: "Italianno";
+    font-size: 4em;
+    font-weight: 400;
+    text-align: center;
+    margin-block: 1em;
+}
+
+.recipes-category {
+    font-family: "Ubuntu";
+    font-weight: 600;
+    font-size: 3em;
+    margin: 0.7em;
+    text-decoration: underline;
+    text-align: center;
+}
+
+
+
+.hidden {
+    display: none;
 }
 
