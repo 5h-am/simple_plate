@@ -85,19 +85,53 @@ img {
 .search-icon,
 .filter-icon,
 .arrow-back-icon,
-.arrow-next-icon {
+.arrow-next-icon,
+.back-icon {
     background-color: #FFC107;
     border-radius: 50%;
     color: #fff;
     padding: 0.4em;
     margin-block: 0.3em;
     text-align: center;
+    transition: 0.5s;
+}
+
+.search-icon:hover,
+.filter-icon:hover,
+.arrow-back-icon:hover,
+.arrow-next-icon:hover,
+.search-btn:hover,
+.back-icon:hover {
+    cursor: pointer;
+    transform: translate(-4px,-2px);
 }
 
 .arrow-back-icon,
 .arrow-next-icon {
     margin-top: 0;
 }
+
+
+
+.search-box{
+    padding: 0.6em 0.1em;
+    border-radius: 0.8rem;
+    text-align: center;
+    border: 1px solid #000;
+    transition: 0.5s;
+}
+
+.search-btn {
+    padding: 0.6em 0.4em;
+    border-radius: 1rem;
+    text-align: center;
+    background-color: #FFC107;
+    color: #fff;
+    border: 2px solid #5c4e04;
+    transition: 0.5s;
+}
+
+
 
 .category-card-text {
     font-family: "Italianno";
