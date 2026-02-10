@@ -11,8 +11,10 @@ let search_btn = document.querySelector(".search-btn");
 let back_icon = document.querySelector(".back-icon");
 let heading = document.querySelector(".heading");
 let back_category = document.querySelector(".back-category");
-let recipe_page = document.querySelector(".recipe-page")
+let recipe_page = document.querySelector(".recipe-page");
 let back_recipe = document.querySelector(".back-recipe");
+let search = document.querySelector(".search");
+let back_search = document.querySelector(".back-search");
 
 function hidden (element) {
     element.classList.add("hidden");
@@ -22,6 +24,19 @@ function visible (element) {
     element.classList.remove("hidden");
 }
 
+function default_page_hidden () {
+    setTimeout(hidden,200,nav_options)
+    setTimeout(hidden,200,animation_box)
+    setTimeout(hidden,200,animation_nav)
+    setTimeout(hidden,200,filtered_box)    
+}
+function default_page_visible () {
+    setTimeout(visible,200,nav_options)
+    setTimeout(visible,200,animation_box)
+    setTimeout(visible,200,animation_nav)
+    setTimeout(visible,200,filtered_box)
+    
+}
 function animation_box_img (img) {
     animation_box.style.background = `url(${img})`
 }
@@ -52,7 +67,7 @@ function recipe_card_creation (img,desc,id) {
 }
 
 function recipe_page_creation(img,dish_name,category,area,youtube_link,ingredients_list,steps_list) {
-    recipe_page.innerHTML +=`<div class="recipe-content">
+    recipe_page.innerHTML =`<div class="recipe-content">
                                 <img src=${img} alt=${dish_name} class="card-img">
                                 <div class="btn-category-flex">
                                     <p class="recipe-content-tags">${category}, ${area}</p>
@@ -80,16 +95,10 @@ function recipe_page_creation(img,dish_name,category,area,youtube_link,ingredien
     }
 }
 
-async function random_recipes() {
-    try {
-        const response =  await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
-        const data = await response.json();
-        return data
-    } catch (err) {
-        console.log("An Error has occured: ",err)
-        return null
-    } 
+function warning_message (element) {
+    element.innerHTML = `<h2 class="warning">Sorry, We don't have any recipes for your search</h2>`
 }
+
 
 let promise = fetch("https://www.themealdb.com/api/json/v1/1/categories.php");
 promise
@@ -114,10 +123,7 @@ filter.onclick = function() {
 
 filtered_box.addEventListener("click", (e)=> {
     if (e.target.tagName === "BUTTON") {
-        setTimeout(hidden,200,nav_options)
-        setTimeout(hidden,200,animation_box)
-        setTimeout(hidden,200,animation_nav)
-        setTimeout(hidden,200,filtered_box) 
+        default_page_hidden()
         let promise = fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${e.target.dataset.cat}`);
         promise
         .then((response) => {
@@ -139,18 +145,15 @@ filtered_box.addEventListener("click", (e)=> {
     }
 })
 
-search_icon.addEventListener("mouseover", ()=> {
+search_icon.addEventListener("click", ()=> {
     setTimeout(visible,500,search_box)
     setTimeout(visible,500,search_btn)
-    search_icon.style.visibility = "hidden";  
+    search_icon.style.visibility = "hidden";
+    setTimeout (hidden,60000,search_box) 
+    setTimeout (hidden,60000,search_btn)
+    setTimeout(()=> { search_icon.style.visibility = "visible"},60000) 
 })
 
-search_box.addEventListener("mouseout", () => {
-    setTimeout(hidden,500,search_box)
-    setTimeout(hidden,500,search_btn)
-    setTimeout(()=>{search_icon.style.visibility = "visible";},700)
-      
-})
 
 back_category.addEventListener("click", (e) => {
     let category_title = sessionStorage.getItem("category_title");
@@ -158,16 +161,13 @@ back_category.addEventListener("click", (e) => {
         hidden(back_category);
         heading.innerHTML = "";
         recipes.innerHTML = "";
-        setTimeout(visible,200,nav_options)
-        setTimeout(visible,200,animation_box)
-        setTimeout(visible,200,animation_nav)
-        setTimeout(visible,200,filtered_box) 
+        default_page_visible()
     } else {
         recipe_page.innerHTML = "";
         recipe_page.classList.remove("recipe-page-design")
         heading.textContent = `${category_title}`;
         setTimeout(visible,200,recipes);
-    }
+    }    
 })
 
 recipes.addEventListener("click", (e) => {
@@ -206,6 +206,53 @@ recipes.addEventListener("click", (e) => {
             console.log("Error occured ", err);
         })
     }
-   
 })
 
+search.addEventListener("click", (e) =>{
+    if (e.target.tagName === "BUTTON") {
+        default_page_hidden()
+        setTimeout(hidden,200,recipes)
+        setTimeout(visible,200,back_search)
+        let search_meal = search_box.value;
+        search_box.value = "";
+        let promise = fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${search_meal}`)
+        promise
+         .then((response) => {
+            return response.json()
+         }).then((data) => {
+            if (!(data["meals"]===null)) {
+                let meal_info = data["meals"][0];
+                let meal_name = meal_info["strMeal"];
+                let img = meal_info["strMealThumb"];
+                let category = meal_info["strCategory"];
+                let area = meal_info["strArea"];
+                let youtube_link = meal_info["strYoutube"];
+                let instructions = meal_info["strInstructions"];
+                let instructions_list = instructions.split("\r\n");
+                let correct_instructions_string = instructions_list.join("");
+                let correct_instructions_list = correct_instructions_string.split(".")
+                correct_instructions_list.pop();
+                let ingredients_list = [];
+                for (let i = 1; i < 100; i++) {
+                    let item = meal_info[`strIngredient${i}`]
+                    let measure = meal_info[`strMeasure${i}`]
+                    if (item === "" || item === null) {
+                        break;
+                    }
+                    heading.textContent = `${meal_name}`
+                    recipe_page.classList.add("recipe-page-design")
+                    ingredients_list.push({ingredient:item,quantity:measure})           
+                }
+                recipe_page_creation(img,meal_name,category,area,youtube_link,ingredients_list,correct_instructions_list)
+            }else {
+                warning_message(recipe_page);
+            }
+         }).catch (err => {
+            console.log("Error occured : ", err)
+         })
+    }
+})
+
+back_search.addEventListener("click", (e) => {
+    window.location.reload();
+})
