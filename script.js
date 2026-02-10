@@ -9,6 +9,10 @@ let search_icon = document.querySelector(".search-icon");
 let search_box = document.querySelector(".search-box");
 let search_btn = document.querySelector(".search-btn");
 let back_icon = document.querySelector(".back-icon");
+let heading = document.querySelector(".heading");
+let back_category = document.querySelector(".back-category");
+let recipe_page = document.querySelector(".recipe-page")
+let back_recipe = document.querySelector(".back-recipe");
 
 function hidden (element) {
     element.classList.add("hidden");
@@ -37,13 +41,43 @@ function category_card_creation (img,desc,filter) {
                                         </div>`
 }
 
-function recipe_card_creation (img,desc) {
+function recipe_card_creation (img,desc,id) {
     recipes.innerHTML += `<div class="recipe-card card">
                             <div class="recipe-card-content card-content">
                                 <img src="${img}" alt="${desc}" class="card-img">
                                 <p class="recipe-card-text">${desc}</p>
                             </div>
+                            <button class="see-recipes-btn see-recipe-btn" data-mealid="${id}">See Recipe</button>
                         </div>`
+}
+
+function recipe_page_creation(img,dish_name,category,area,youtube_link,ingredients_list,steps_list) {
+    recipe_page.innerHTML +=`<div class="recipe-content">
+                                <img src=${img} alt=${dish_name} class="card-img">
+                                <div class="btn-category-flex">
+                                    <p class="recipe-content-tags">${category}, ${area}</p>
+                                    <a href="${youtube_link}">Watch a video of the recipe</a>       
+                                </div>
+                                <p class="ingredients-head">Ingredients List with Quantity</p>
+                                <ul class="ingredients">
+                                </ul>
+                                <div class="recipe-steps">
+                                </div>
+                            </div>`
+    let ingredients = document.querySelector(".ingredients");
+    let recipe_steps = document.querySelector(".recipe-steps");
+    for(let i = 0; i<ingredients_list.length;i++) {
+        let li = document.createElement("li");
+        li.innerHTML = `<span class="ingredient">${ingredients_list[i]["ingredient"]} : </span>${ingredients_list[i]["quantity"]}`
+        ingredients.appendChild(li);
+    }
+
+    for (let i = 0; i<steps_list.length;i++) {
+        let p = document.createElement("p");
+        p.classList.add("recipe-content-text")
+        p.innerHTML = `<span>Step ${i+1} : </span>${steps_list[i]}`;
+        recipe_steps.appendChild(p);
+    }
 }
 
 async function random_recipes() {
@@ -79,7 +113,7 @@ filter.onclick = function() {
 }
 
 filtered_box.addEventListener("click", (e)=> {
-    if (e.target.tagName = "BUTTON") {
+    if (e.target.tagName === "BUTTON") {
         setTimeout(hidden,200,nav_options)
         setTimeout(hidden,200,animation_box)
         setTimeout(hidden,200,animation_nav)
@@ -89,19 +123,15 @@ filtered_box.addEventListener("click", (e)=> {
         .then((response) => {
             return response.json()
         }).then((data) => {
-            let span = document.createElement("span");
-            span.classList.add("material-symbols-outlined","back-icon");
-            span.textContent = "arrow_back";
-            let h2 = document.createElement("h2");
-            h2.classList.add("recipes-category");
-            h2.textContent = e.target.dataset.cat;
-            recipes.appendChild(span);
-            recipes.appendChild(h2);
+            heading.textContent = e.target.dataset.cat;
+            sessionStorage.setItem("category_title",heading.textContent);
+            visible(back_category)
             let meals = data["meals"];
             for (let i = 0; i<meals.length;i++) {
-                img = meals[i]["strMealThumb"];
-                desc = meals[i]["strMeal"];
-                recipe_card_creation(img,desc);
+                let img = meals[i]["strMealThumb"];
+                let desc = meals[i]["strMeal"];
+                let id = meals[i]["idMeal"]
+                recipe_card_creation(img,desc,id);
             }
         }).catch(err=> {
             console.log("Error Occured: ",err);
@@ -122,13 +152,60 @@ search_box.addEventListener("mouseout", () => {
       
 })
 
-recipes.addEventListener("click", (e) => {
-    if(e.target.tagName = "SPAN") {
+back_category.addEventListener("click", (e) => {
+    let category_title = sessionStorage.getItem("category_title");
+    if (document.querySelector(".recipe-content") === null) {
+        hidden(back_category);
+        heading.innerHTML = "";
         recipes.innerHTML = "";
         setTimeout(visible,200,nav_options)
         setTimeout(visible,200,animation_box)
         setTimeout(visible,200,animation_nav)
         setTimeout(visible,200,filtered_box) 
+    } else {
+        recipe_page.innerHTML = "";
+        recipe_page.classList.remove("recipe-page-design")
+        heading.textContent = `${category_title}`;
+        setTimeout(visible,200,recipes);
     }
+})
+
+recipes.addEventListener("click", (e) => {
+    if(e.target.tagName === "BUTTON") {     
+        setTimeout(hidden,200,recipes);
+        let mealid = e.target.dataset.mealid;
+        let promise = fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealid}`);
+        promise
+        .then((response) => {
+            return response.json();
+        }).then((data) => {
+            let meal_info = data["meals"][0];
+            let meal_name = meal_info["strMeal"];
+            let img = meal_info["strMealThumb"];
+            let category = meal_info["strCategory"];
+            let area = meal_info["strArea"];
+            let youtube_link = meal_info["strYoutube"];
+            let instructions = meal_info["strInstructions"];
+            let instructions_list = instructions.split("\r\n");
+            let correct_instructions_string = instructions_list.join("");
+            let correct_instructions_list = correct_instructions_string.split(".")
+            correct_instructions_list.pop();
+            let ingredients_list = [];
+            for (let i = 1; i < 100; i++) {
+                let item = meal_info[`strIngredient${i}`]
+                let measure = meal_info[`strMeasure${i}`]
+                if (item === "" || item === null) {
+                    break;
+                }
+                heading.textContent = `${meal_name}`
+                recipe_page.classList.add("recipe-page-design")
+                ingredients_list.push({ingredient:item,quantity:measure})           
+            }
+            recipe_page_creation(img,meal_name,category,area,youtube_link,ingredients_list,correct_instructions_list)
+        }).catch (err => {
+            console.log("Error occured ", err);
+        })
+    }
+   
 })
 
