@@ -15,6 +15,9 @@ let recipe_page = document.querySelector(".recipe-page");
 let back_recipe = document.querySelector(".back-recipe");
 let search = document.querySelector(".search");
 let back_search = document.querySelector(".back-search");
+let filter_search = document.querySelector(".filter-search");
+let filter_search_box = document.querySelector(".filter-search-box");
+let back_filter_recipe = document.querySelector(".back-filter-recipe")
 
 function hidden (element) {
     element.classList.add("hidden");
@@ -149,9 +152,9 @@ search_icon.addEventListener("click", ()=> {
     setTimeout(visible,500,search_box)
     setTimeout(visible,500,search_btn)
     search_icon.style.visibility = "hidden";
-    setTimeout (hidden,60000,search_box) 
-    setTimeout (hidden,60000,search_btn)
-    setTimeout(()=> { search_icon.style.visibility = "visible"},60000) 
+    setTimeout (hidden,20000,search_box) 
+    setTimeout (hidden,20000,search_btn)
+    setTimeout(()=> { search_icon.style.visibility = "visible"},20000) 
 })
 
 
@@ -171,7 +174,11 @@ back_category.addEventListener("click", (e) => {
 })
 
 recipes.addEventListener("click", (e) => {
-    if(e.target.tagName === "BUTTON") {     
+    if(e.target.tagName === "BUTTON") {
+        if (!(filter_search_box === null)) {
+            setTimeout(hidden,200,back_search)
+            setTimeout(visible,200,back_filter_recipe)
+        }     
         setTimeout(hidden,200,recipes);
         let mealid = e.target.dataset.mealid;
         let promise = fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealid}`);
@@ -256,3 +263,69 @@ search.addEventListener("click", (e) =>{
 back_search.addEventListener("click", (e) => {
     window.location.reload();
 })
+
+filter_options.addEventListener("click", (e) => {
+    if (e.target.tagName === "A") {
+        hidden(filter_options);
+        sessionStorage.setItem("filter_search",e.target.textContent);
+        default_page_hidden();
+        setTimeout(visible,200,back_search)
+        setTimeout(visible,200,filter_search)
+           
+    }
+})
+
+filter_search.addEventListener("click", (e)=> {
+    if (e.target.tagName === "BUTTON") {
+        setTimeout(hidden,200,filter_search)
+        let search_value = filter_search_box.value;
+        let filter = sessionStorage.getItem("filter_search");
+        switch (filter) {
+            case "Category" :
+                search_filtering(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${search_value}`,search_value);
+                break;
+            case "Main Ingredient" :
+                search_filtering(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${search_value}`,search_value);
+                break;
+            case "Area" :
+                search_filtering(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${search_value}`,search_value)
+                break;  
+        }
+    }
+})
+
+
+function search_filtering (url,filter_value) {
+    let promise = fetch(url);
+    promise
+        .then((response)=> {
+            return response.json()
+        }).then ((data)=> {
+            heading.textContent = filter_value;
+            sessionStorage.setItem("filter_value",filter_value)
+            let meals = data["meals"];
+            if (!(meals === null)) {
+                for (let i = 0; i<meals.length;i++) {
+                    let img = meals[i]["strMealThumb"];
+                    let desc = meals[i]["strMeal"];
+                    let id = meals[i]["idMeal"]
+                    recipe_card_creation(img,desc,id);
+                }
+            }else {
+                warning_message(recipes);
+            }
+        }).catch(err => {
+            console.log("Error Occured : ",err);
+        })
+}
+
+back_filter_recipe.addEventListener("click", () => {
+    let title = sessionStorage.getItem("filter_value")
+    recipe_page.innerHTML = "";
+    heading.innerHTML = "";
+    heading.textContent = title;
+    recipe_page.classList.remove("recipe-page-design")
+    setTimeout(visible,200,recipes);
+    setTimeout(hidden,200,back_filter_recipe);
+    setTimeout(visible,200,back_search);
+}) 
