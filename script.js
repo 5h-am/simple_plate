@@ -195,7 +195,7 @@ animation_box.addEventListener("click", ()=> {
     let correct_instructions_list = correct_instructions_string.split(".")
     correct_instructions_list.pop();
     let ingredients_list = [];
-    for (let i = 1; i < 100; i++) {
+    for (let i = 1; i < 21; i++) {
         let item = meal_info[`strIngredient${i}`]
         let measure = meal_info[`strMeasure${i}`]
         if (item === "" || item === null) {
@@ -295,7 +295,7 @@ recipes.addEventListener("click", (e) => {
             let correct_instructions_list = correct_instructions_string.split(".")
             correct_instructions_list.pop();
             let ingredients_list = [];
-            for (let i = 1; i < 100; i++) {
+            for (let i = 1; i < 21; i++) {
                 let item = meal_info[`strIngredient${i}`]
                 let measure = meal_info[`strMeasure${i}`]
                 if (item === "" || item === null) {
@@ -337,7 +337,7 @@ search.addEventListener("click", (e) =>{
                 let correct_instructions_list = correct_instructions_string.split(".")
                 correct_instructions_list.pop();
                 let ingredients_list = [];
-                for (let i = 1; i < 100; i++) {
+                for (let i = 1; i < 21; i++) {
                     let item = meal_info[`strIngredient${i}`]
                     let measure = meal_info[`strMeasure${i}`]
                     if (item === "" || item === null) {
