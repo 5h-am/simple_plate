@@ -218,7 +218,7 @@ animation_recipe_back.addEventListener("click", () => {
 
 filter.onclick = function() {
     visible(filter_options);
-    setTimeout(hidden, 5000,filter_options);
+    setTimeout(hidden, 10000,filter_options);
 }
 
 filtered_box.addEventListener("click", (e)=> {
