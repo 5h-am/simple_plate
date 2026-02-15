@@ -2,6 +2,8 @@ let recipes = document.querySelector(".recipes");
 let filtered_box = document.querySelector(".filtered-box");
 let animation_box = document.querySelector(".animation-box");
 let animation_nav = document.querySelector(".animation-nav");
+let arrow_back_icon = document.querySelector(".arrow-back-icon");
+let arrow_next_icon = document.querySelector(".arrow-next-icon");
 let filter = document.querySelector(".filter");
 let filter_options = document.querySelector(".filter-options")
 let nav_options = document.querySelector(".nav-options");
@@ -17,7 +19,13 @@ let search = document.querySelector(".search");
 let back_search = document.querySelector(".back-search");
 let filter_search = document.querySelector(".filter-search");
 let filter_search_box = document.querySelector(".filter-search-box");
-let back_filter_recipe = document.querySelector(".back-filter-recipe")
+let back_filter_recipe = document.querySelector(".back-filter-recipe");
+let filter_search_btn = document.querySelector(".filter-search-btn");
+let animation_recipe_back = document.querySelector(".animation-recipe-back");
+
+
+let random_meals = [];
+let random_meal_index = 3;
 
 function hidden (element) {
     element.classList.add("hidden");
@@ -42,6 +50,11 @@ function default_page_visible () {
 }
 function animation_box_img (img) {
     animation_box.style.background = `url(${img})`
+    animation_box.style.backgroundRepeat = `no-repeat`
+    animation_box.style.backgroundPosition = `center`
+    animation_box.style.backgroundSize = `cover`
+    animation_box.style.padding = `4em 6em`
+   
 }
 
 function animation_box_text (desc,cat) {
@@ -103,6 +116,7 @@ function warning_message (element) {
 }
 
 
+
 let promise = fetch("https://www.themealdb.com/api/json/v1/1/categories.php");
 promise
 .then((response)=> {
@@ -118,6 +132,89 @@ promise
     console.log("Error Occured: ", err);
 }) 
 
+for (let i = 0;i < 7; i++ ) {
+    let promise = fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+    .then ((response) => {
+        return response.json()
+    }).then ((data) => {
+        random_meals.push(data["meals"])
+        if (random_meals.length === 4) {
+            let meal =  data["meals"];
+            let img = meal[0]["strMealThumb"];
+            let meal_name = meal[0]["strMeal"];
+            let meal_category = meal[0]["strCategory"];
+            animation_box_img(img)
+            animation_box_text(meal_name, meal_category);
+        }
+    }).catch(err => console.log("Error Occured", err));
+}
+
+
+arrow_next_icon.addEventListener("click", () => {
+    if (random_meal_index === 8) {
+        random_meal_index = 0;
+    } else {
+        random_meal_index += 1;
+    }
+    let meal = random_meals[random_meal_index][0];
+    let img = meal["strMealThumb"];
+    let meal_name = meal["strMeal"];
+    let meal_category = meal["strCategory"];
+
+    animation_box_img(img)
+    animation_box_text(meal_name, meal_category);
+})
+
+arrow_back_icon.addEventListener("click", () => {
+    if (random_meal_index === 0) {
+        random_meal_index = 8;
+    } else {
+        random_meal_index -= 1;
+    }
+    let meal = random_meals[random_meal_index][0];
+    let img = meal["strMealThumb"];
+    let meal_name = meal["strMeal"];
+    let meal_category = meal["strCategory"];
+
+    animation_box_img(img)
+    animation_box_text(meal_name, meal_category);
+})
+
+animation_box.addEventListener("click", ()=> {
+    default_page_hidden();
+    setTimeout(visible,400,animation_recipe_back);
+    let meal_info = random_meals[random_meal_index][0];
+    let meal_name = meal_info["strMeal"];
+    let img = meal_info["strMealThumb"];
+    let category = meal_info["strCategory"];
+    let area = meal_info["strArea"];
+    let youtube_link = meal_info["strYoutube"];
+    let instructions = meal_info["strInstructions"];
+    let instructions_list = instructions.split("\r\n");
+    let correct_instructions_string = instructions_list.join("");
+    let correct_instructions_list = correct_instructions_string.split(".")
+    correct_instructions_list.pop();
+    let ingredients_list = [];
+    for (let i = 1; i < 100; i++) {
+        let item = meal_info[`strIngredient${i}`]
+        let measure = meal_info[`strMeasure${i}`]
+        if (item === "" || item === null) {
+            break;
+        }
+        heading.textContent = `${meal_name}`
+        recipe_page.classList.add("recipe-page-design")
+        ingredients_list.push({ingredient:item,quantity:measure})           
+    }
+    recipe_page_creation(img,meal_name,category,area,youtube_link,ingredients_list,correct_instructions_list)
+})
+
+animation_recipe_back.addEventListener("click", () => {
+    hidden(animation_recipe_back);  
+    recipe_page.classList.remove("recipe-page-design")
+    heading.textContent  = "";
+    recipe_page.innerHTML = "";
+    default_page_visible();
+})
 
 filter.onclick = function() {
     visible(filter_options);
@@ -175,7 +272,7 @@ back_category.addEventListener("click", (e) => {
 
 recipes.addEventListener("click", (e) => {
     if(e.target.tagName === "BUTTON") {
-        if (!(filter_search_box === null)) {
+        if (!(filter_search_box.value === "")) {
             setTimeout(hidden,200,back_search)
             setTimeout(visible,200,back_filter_recipe)
         }     
@@ -301,10 +398,10 @@ function search_filtering (url,filter_value) {
         .then((response)=> {
             return response.json()
         }).then ((data)=> {
-            heading.textContent = filter_value;
-            sessionStorage.setItem("filter_value",filter_value)
             let meals = data["meals"];
             if (!(meals === null)) {
+                heading.textContent = filter_value;
+                sessionStorage.setItem("filter_value",filter_value)
                 for (let i = 0; i<meals.length;i++) {
                     let img = meals[i]["strMealThumb"];
                     let desc = meals[i]["strMeal"];

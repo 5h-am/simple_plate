@@ -68,8 +68,7 @@ img {
     justify-content: space-between;
 }
 
-.animation-box{
-    background: url("https://www.themealdb.com/images/media/meals/u2lhqb1763331899.jpg");
+.animation-box-background_img{
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
