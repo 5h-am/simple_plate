@@ -315,7 +315,16 @@ img {
     .btn-category-flex {
         display: block;
     }
+    .filter-search-btn {
+        display: flex;
+        justify-self: center;
+        margin-top: 1em;
+    }
+    .filter-search-box {
+        padding-inline: 4em;
+    }
 }
+
 
 
 .hidden {
